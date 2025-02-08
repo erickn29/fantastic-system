@@ -10,8 +10,8 @@ class QuestionRepositoryProtocol(Protocol):
         pass
 
     async def get_unanswered_questions(
-        self, user_id: int, technologies: list[str]
-    ) -> list[QuestionDto]:
+        self, user_id: int, technologies: list[str] | None = None
+    ) -> list[QuestionDto] | None:
         """Возвращает все неотвеченные вопросы по технологии"""
         pass
 
@@ -22,7 +22,7 @@ class SQLAlchemyQuestionRepositoryV1(SQLAlchemyRepository):
         return []
 
     async def get_unanswered_questions(
-        self, user_id: int, technologies: list[str]
-    ) -> list[QuestionDto]:
+        self, user_id: int, technologies: list[str] | None = None
+    ) -> list[QuestionDto] | None:
         """Возвращает все неотвеченные вопросы по технологии"""
         return []
