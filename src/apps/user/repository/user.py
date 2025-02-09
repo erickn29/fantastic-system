@@ -2,6 +2,7 @@ from typing import Protocol
 
 from apps.interview.repository.sql_alchemy import SQLAlchemyRepository
 from apps.user.dto.user import UserDto
+from model.user import User
 
 
 class UserRepositoryProtocol(Protocol):
@@ -11,7 +12,7 @@ class UserRepositoryProtocol(Protocol):
 
 
 class UserRepositoryV1(SQLAlchemyRepository):
-    model = None
+    model = User
 
     async def find_user(self, tg_id: int) -> UserDto | None:
         """Возвращает пользователя по tg_id"""

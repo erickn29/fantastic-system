@@ -3,12 +3,13 @@ from datetime import datetime
 from sqlalchemy import BigInteger, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from model.base import Base
+from model.base import Base, uuid_pk
 
 
 class User(Base):
     __tablename__ = "user"
 
+    id: Mapped[uuid_pk]
     tg_id: Mapped[int] = mapped_column(BigInteger, doc="Telegram ID", nullable=False)
     tg_url: Mapped[str] = mapped_column(String, doc="Telegram URL", nullable=False)
     first_name: Mapped[str] = mapped_column(String, nullable=False, doc="Имя")

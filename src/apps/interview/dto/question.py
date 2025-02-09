@@ -1,9 +1,11 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class QuestionDto(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     text: str
     complexity: int = 5

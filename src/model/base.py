@@ -45,7 +45,7 @@ updated_at = Annotated[
 
 
 class Base(DeclarativeBase):
-    id: Mapped[int_pk]
+    id: Mapped[int_pk] | Mapped[uuid_pk]
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]
 
