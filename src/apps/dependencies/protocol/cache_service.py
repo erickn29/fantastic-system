@@ -1,4 +1,5 @@
 from typing import Protocol
+from uuid import UUID
 
 from apps.user.dto.user import UserDto
 
@@ -25,4 +26,20 @@ class CacheServiceProtocol(Protocol):
 
     async def get_user(self, key: str) -> UserDto | None:
         """Получает значение из кэша по ключу"""
+        pass
+
+    async def set_stack(self, user_id: UUID, stack: list[str]):
+        """Сохраняет стек технологий пользователя"""
+        pass
+
+    async def get_stack(self, user_id: UUID) -> list[str] | None:
+        """Возвращает стек технологий пользователя"""
+        pass
+
+    async def set_user_last_question(self, user_id: UUID, question_id: int):
+        """Сохраняет последний вопрос пользователя"""
+        pass
+
+    async def get_user_last_question(self, user_id: UUID) -> int | None:
+        """Возвращает последний вопрос пользователя"""
         pass

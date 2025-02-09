@@ -32,16 +32,22 @@ created_at = Annotated[
         doc="Дата создания",
     ),
 ]
-
-
-class Base(DeclarativeBase):
-    created_at: Mapped[datetime] = mapped_column(
+updated_at = Annotated[
+    datetime,
+    mapped_column(
         TIMESTAMP_WITH_TIMEZONE,
         default=datetime.now,
         nullable=False,
         onupdate=datetime.now,
-        doc="Дата создания",
-    )
+        doc="Дата изменения",
+    ),
+]
+
+
+class Base(DeclarativeBase):
+    id: Mapped[int_pk]
+    created_at: Mapped[created_at]
+    updated_at: Mapped[updated_at]
 
     @classmethod
     def ordering(cls):

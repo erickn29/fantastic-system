@@ -1,5 +1,7 @@
 import json
 
+from uuid import UUID
+
 import redis.asyncio as redis
 
 from redis import RedisError
@@ -35,16 +37,16 @@ class Cache:
     async def delete(self, key: str):
         await self.redis_cache.delete(key)
 
-    async def set_user(self, schema: UserDto):
-        user_dict = schema.model_dump()
+    async def set_user(self, user: UserDto):
+        user_dict = user.model_dump()
         user_dict["created_at"] = user_dict["created_at"].strftime("%Y-%m-%d %H:%M:%S")
         user_dict["updated_at"] = user_dict["updated_at"].strftime("%Y-%m-%d %H:%M:%S")
-        if schema.subscription:
+        if user.subscription:
             user_dict["subscription"] = user_dict["subscription"].strftime(
                 "%Y-%m-%d %H:%M:%S"
             )
         await self.set(
-            f"user:{str(schema.tg_id)}",
+            f"user:{str(user.tg_id)}",
             json.dumps(user_dict),
             60 * 60 * 24 * 7,
         )
@@ -52,10 +54,43 @@ class Cache:
     async def get_user(self, key: str) -> UserDto | None:
         res = await self.get(key)
         if res:
-            schema = UserDto.model_validate(json.loads(res))
-            schema.id = int(schema.id)
-            schema.tg_id = int(schema.tg_id)
-            return UserDto.model_validate(schema)
+            user = UserDto.model_validate(json.loads(res))
+            return user
+        return None
+
+    async def set_stack(self, user_id: UUID, stack: list[str]):
+        """Сохраняет стек технологий пользователя"""
+        if not user_id or not stack:
+            return
+        key = f"user_id:{user_id}:stack"
+        await self.set(key, json.dumps(stack), 60 * 60 * 24 * 365)
+
+    async def get_stack(self, user_id: UUID) -> list[str] | None:
+        """Возвращает стек технологий пользователя"""
+        if not user_id:
+            return None
+        key = f"user_id:{user_id}:stack"
+        user_stack = await self.get(key)
+        if not user_stack:
+            return None
+        stack: list[str] = json.loads(user_stack)
+        return stack
+
+    async def set_user_last_question(self, user_id: UUID, question_id: int):
+        """Сохраняет последний вопрос пользователя"""
+        if not user_id or not question_id:
+            return
+        key = f"user_id:{user_id}:last_question"
+        ttl = 60 * 60 * 24 * 7 * 55
+        await self.set(key, str(question_id), ttl)
+
+    async def get_user_last_question(self, user_id: UUID) -> int | None:
+        """Возвращает последний вопрос пользователя"""
+        if not user_id:
+            return None
+        key = f"user_id:{user_id}:last_question"
+        if question_id := await self.get(key):
+            return int(question_id)
         return None
 
 
