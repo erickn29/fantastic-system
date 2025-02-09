@@ -23,7 +23,7 @@ class QuestionRepositoryProtocol(Protocol):
         """Возвращает все неотвеченные вопросы по технологии"""
         pass
 
-    async def create_user_question_object(self, user_id: UUID, question_id: int):
+    async def create_user_question_obj(self, user_id: UUID, question_id: int):
         """Связывает пользователя с вопросом"""
         pass
 
@@ -76,7 +76,7 @@ class SQLAlchemyQuestionRepositoryV1(SQLAlchemyRepository):
         questions = result.all()
         return [QuestionDto.model_validate(question) for question in questions]
 
-    async def create_user_question_object(self, user_id: UUID, question_id: int):
+    async def create_user_question_obj(self, user_id: UUID, question_id: int):
         """Связывает пользователя с вопросом"""
         user_question_object = UserQuestion(user_id=user_id, question_id=question_id)
         self.session.add(user_question_object)
