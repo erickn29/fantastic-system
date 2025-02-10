@@ -1,6 +1,6 @@
 from app.apps.interview.dto.question import QuestionDto
 from app.apps.interview.entity.question import QuestionProtocol
-from app.tools.protocol.cache import CacheServiceProtocol
+from app.tools.cache import CacheServiceProtocol
 from app.tools.repository.sql_alchemy.uow import UOWProtocol
 
 
