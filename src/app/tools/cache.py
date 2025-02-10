@@ -6,7 +6,7 @@ import redis.asyncio as redis
 
 from redis import RedisError
 
-from apps.user.dto.user import UserDto
+from app.apps.user.dto.user import UserDto
 from core.config import config
 
 

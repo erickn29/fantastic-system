@@ -2,8 +2,8 @@ from asyncio import Protocol
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from apps.interview.repository.question import QuestionRepositoryProtocol
-from apps.user.repository.user import UserRepositoryProtocol
+from app.apps.interview.repository.question import QuestionRepositoryProtocol
+from app.apps.user.repository.user import UserRepositoryProtocol
 from core.database import db_conn
 
 
@@ -56,6 +56,7 @@ class SQLAlchemyUOW:
         return self._user_repo(self._session)  # type: ignore
 
     async def __aenter__(self):
+        await self._session.begin()
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):

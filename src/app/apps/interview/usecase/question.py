@@ -1,7 +1,7 @@
-from apps.cache_protocol import CacheServiceProtocol
-from apps.interview.dto.question import QuestionDto
-from apps.interview.entity.question import QuestionProtocol
-from apps.uow import UOWProtocol
+from app.apps.interview.dto.question import QuestionDto
+from app.apps.interview.entity.question import QuestionProtocol
+from app.tools.protocol.cache import CacheServiceProtocol
+from app.tools.repository.sql_alchemy.uow import UOWProtocol
 
 
 class QuestionUseCase:

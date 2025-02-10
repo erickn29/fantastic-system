@@ -4,8 +4,8 @@ from uuid import UUID
 
 from sqlalchemy import select
 
-from apps.interview.dto.question import QuestionDto
-from apps.interview.repository.sql_alchemy import SQLAlchemyRepository
+from app.apps.interview.dto.question import QuestionDto
+from app.tools.repository.sql_alchemy.sql_alchemy import SQLAlchemyRepository
 from model.question import Question
 from model.question_technology import QuestionTechnology
 from model.technology import Technology

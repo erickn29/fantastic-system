@@ -2,7 +2,7 @@ import random
 
 from typing import Protocol
 
-from apps.interview.dto.question import QuestionDto
+from app.apps.interview.dto.question import QuestionDto
 
 
 class QuestionProtocol(Protocol):

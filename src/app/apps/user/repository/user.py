@@ -1,7 +1,7 @@
 from typing import Protocol
 
-from apps.interview.repository.sql_alchemy import SQLAlchemyRepository
-from apps.user.dto.user import UserDto
+from app.apps.user.dto.user import UserDto
+from app.tools.repository.sql_alchemy.sql_alchemy import SQLAlchemyRepository
 from model.user import User
 
 
