@@ -3,12 +3,13 @@ from uuid import UUID
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from model.base import Base
+from model.base import Base, int_pk
 
 
 class UserQuestion(Base):
     __tablename__ = "user_question"
 
+    id: Mapped[int_pk]
     user_id: Mapped[UUID] = mapped_column(
         ForeignKey("user.id"), nullable=False, doc="ID пользователя"
     )

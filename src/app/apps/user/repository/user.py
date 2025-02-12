@@ -11,7 +11,7 @@ class UserRepositoryProtocol(Protocol):
         pass
 
 
-class UserRepositoryV1(SQLAlchemyRepository):
+class SQLAlchemyUserRepositoryV1(SQLAlchemyRepository):
     model = User
 
     async def find_user(self, tg_id: int) -> UserDto | None:

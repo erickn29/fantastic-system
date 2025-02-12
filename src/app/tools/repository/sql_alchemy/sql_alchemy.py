@@ -305,7 +305,7 @@ class SQLAlchemyRepository[T]:
         result: T | None = await self.session.scalar(statement=statement)
         return result
 
-    async def create(self, commit: bool = True, **model_data) -> T:
+    async def create(self, commit: bool = False, **model_data) -> T:
         """
         Создает новую запись модели и сохраняет ее в базе данных.
 
@@ -321,7 +321,7 @@ class SQLAlchemyRepository[T]:
         await self.session.commit() if commit else await self.session.flush()
         return instance  # type: ignore
 
-    async def update(self, instance: T, commit: bool = True, **model_data) -> T:
+    async def update(self, instance: T, commit: bool = False, **model_data) -> T:
         """
         Обновляет существующую запись модели и сохраняет изменения в базе данных.
 
@@ -339,7 +339,7 @@ class SQLAlchemyRepository[T]:
         await self.session.commit() if commit else await self.session.flush()
         return instance
 
-    async def delete(self, instance: T, commit: bool = True) -> None:
+    async def delete(self, instance: T, commit: bool = False) -> None:
         """
         Удаляет существующую запись модели из базы данных.
 
@@ -351,7 +351,7 @@ class SQLAlchemyRepository[T]:
         await self.session.commit() if commit else await self.session.flush()
 
     async def get_or_create(
-        self, filters: list[str], commit: bool = True, **model_data
+        self, filters: list[str], commit: bool = False, **model_data
     ) -> tuple[T, bool]:
         """
         Ищет существующую запись модели по заданным фильтрам или создаёт новую запись,
@@ -377,7 +377,7 @@ class SQLAlchemyRepository[T]:
         return await self.create(commit, **model_data), created
 
     async def update_or_create(
-        self, filters: dict[str, Any], commit: bool = True, **model_data
+        self, filters: dict[str, Any], commit: bool = False, **model_data
     ) -> tuple[T, bool]:
         """
         Обновляет существующую запись модели по заданным фильтрам или создаёт новую

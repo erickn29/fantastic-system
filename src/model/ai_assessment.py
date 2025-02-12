@@ -1,12 +1,13 @@
 from sqlalchemy import ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from model.base import Base
+from model.base import Base, int_pk
 
 
 class AIAssessment(Base):
     __tablename__ = "ai_assessment"
 
+    id: Mapped[int_pk]
     text: Mapped[str] = mapped_column(Text, nullable=False, doc="Текст оценки")
     user_id: Mapped[int] = mapped_column(
         ForeignKey("user.id"), nullable=False, doc="ID пользователя"

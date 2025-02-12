@@ -1,12 +1,13 @@
 from sqlalchemy import ForeignKey, SmallInteger, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from model.base import Base
+from model.base import Base, int_pk
 
 
 class Answer(Base):
     __tablename__ = "answer"
 
+    id: Mapped[int_pk]
     text: Mapped[str] = mapped_column(Text, nullable=False, doc="Текст ответа")
     user_id: Mapped[int] = mapped_column(
         ForeignKey("user.id"), nullable=False, doc="ID пользователя"

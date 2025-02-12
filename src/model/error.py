@@ -2,12 +2,13 @@ from sqlalchemy import Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.database import db_conn
-from model.base import Base
+from model.base import Base, int_pk
 
 
 class Error(Base):
     __tablename__ = "error"
 
+    id: Mapped[int_pk]
     text: Mapped[str] = mapped_column(Text, nullable=False, doc="Текст ошибки")
 
 
