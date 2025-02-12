@@ -68,8 +68,8 @@ async def init_data(session):
             question_id=q_sql_1.id,
         )
         await question_tech_repo.create(
-            technical_id=sql.id,
-            questions_id=q_sql_2.id,
+            technology_id=sql.id,
+            question_id=q_sql_2.id,
         )
         await question_tech_repo.create(
             question_id=q_sql_3.id,
@@ -89,5 +89,30 @@ async def init_data(session):
         }
 
 
-async def test_get_questions_python(session):
-    assert True
+async def test_get_questions_python(run_migrations, session, init_data):
+    async with session:
+        question_repo = SQLAlchemyQuestionRepositoryV1(session)
+        questions = await question_repo.get_questions(
+            [
+                "python",
+            ]
+        )
+    assert len(questions) == 3
+
+
+async def test_get_questions_sql(run_migrations, session, init_data):
+    async with session:
+        question_repo = SQLAlchemyQuestionRepositoryV1(session)
+        questions = await question_repo.get_questions(
+            [
+                "sql",
+            ]
+        )
+    assert len(questions) == 3
+
+
+async def test_get_questions_all(run_migrations, session, init_data):
+    async with session:
+        question_repo = SQLAlchemyQuestionRepositoryV1(session)
+        questions = await question_repo.get_questions(["sql", "python"])
+    assert len(questions) == 6

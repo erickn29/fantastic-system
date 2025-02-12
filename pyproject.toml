@@ -28,13 +28,10 @@ sqlalchemy-utils = "^0.41.2"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-env_files = ["secrets/.env"]
-env_override_existing_values = 1
 python_classes = "*Test"
 python_files = "tests.py test_*.py"
 pythonpath = "src"
 testpaths = ["tests"]
-asyncio_default_fixture_loop_scope="session"
 
 
 [tool.poetry.group.dev.dependencies]

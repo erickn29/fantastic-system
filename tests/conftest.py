@@ -1,7 +1,4 @@
-import asyncio
-
-from collections.abc import AsyncGenerator, Generator
-from typing import Any
+from collections.abc import AsyncGenerator
 from uuid import uuid4
 
 import pytest
@@ -15,17 +12,7 @@ from model.base import Base
 
 
 @pytest.fixture(scope="session")
-def event_loop() -> Generator[asyncio.AbstractEventLoop, Any, None]:
-    try:
-        loop = asyncio.get_running_loop()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-    yield loop
-    loop.close()
-
-
-@pytest.fixture(scope="session")
-def database(event_loop):
+def database():
     async_db_url = config.db.url(db_name=f"test_db_{uuid4().hex[:5]}")
     db_url = async_db_url.replace("postgresql+asyncpg", "postgresql")
     if not database_exists(db_url):
