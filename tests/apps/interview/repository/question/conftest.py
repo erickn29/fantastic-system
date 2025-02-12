@@ -5,6 +5,9 @@ from app.apps.interview.repository.question_technology import (
     SQLAlchemyQuestionTechnologyRepositoryV1,
 )
 from app.apps.interview.repository.technology import SQLAlchemyTechnologyRepositoryV1
+from app.apps.interview.repository.user_question import (
+    SQLAlchemyUserQuestionRepositoryV1,
+)
 from app.apps.user.repository.user import SQLAlchemyUserRepositoryV1
 
 
@@ -15,6 +18,7 @@ async def init_data(session):
         user_repo = SQLAlchemyUserRepositoryV1(session)
         tech_repo = SQLAlchemyTechnologyRepositoryV1(session)
         question_tech_repo = SQLAlchemyQuestionTechnologyRepositoryV1(session)
+        user_question_repo = SQLAlchemyUserQuestionRepositoryV1(session)
 
         user = await user_repo.create(
             tg_id=123,
@@ -37,6 +41,10 @@ async def init_data(session):
             text="q_python_3",
             published=True,
         )
+        await question_repo.create(
+            text="q_python_4",
+            published=False,
+        )
         q_sql_1 = await question_repo.create(
             text="q_sql_1",
             published=True,
@@ -49,6 +57,12 @@ async def init_data(session):
             text="q_sql_3",
             published=True,
         )
+
+        await user_question_repo.create(user_id=user.id, question_id=q_python_1.id)
+        await user_question_repo.create(user_id=user.id, question_id=q_python_2.id)
+        await user_question_repo.create(user_id=user.id, question_id=q_python_3.id)
+        await user_question_repo.create(user_id=user.id, question_id=q_sql_1.id)
+        await user_question_repo.create(user_id=user.id, question_id=q_sql_2.id)
 
         await question_tech_repo.create(
             question_id=q_python_1.id,
@@ -87,38 +101,3 @@ async def init_data(session):
             "q_sql_2": q_sql_2,
             "q_sql_3": q_sql_3,
         }
-
-
-async def test_get_questions_python(run_migrations, session, init_data):
-    async with session:
-        question_repo = SQLAlchemyQuestionRepositoryV1(session)
-        questions = await question_repo.get_questions(["python"])
-    assert len(questions) == 3
-
-
-async def test_get_questions_sql(run_migrations, session, init_data):
-    async with session:
-        question_repo = SQLAlchemyQuestionRepositoryV1(session)
-        questions = await question_repo.get_questions(["sql"])
-    assert len(questions) == 3
-
-
-async def test_get_questions_all(run_migrations, session, init_data):
-    async with session:
-        question_repo = SQLAlchemyQuestionRepositoryV1(session)
-        questions = await question_repo.get_questions(["sql", "python"])
-    assert len(questions) == 6
-
-
-async def test_get_questions_empty_stack(run_migrations, session, init_data):
-    async with session:
-        question_repo = SQLAlchemyQuestionRepositoryV1(session)
-        questions = await question_repo.get_questions([])
-    assert len(questions) == 0
-
-
-async def test_get_questions_wrong_stack(run_migrations, session, init_data):
-    async with session:
-        question_repo = SQLAlchemyQuestionRepositoryV1(session)
-        questions = await question_repo.get_questions(["_wrong_"])
-    assert len(questions) == 0

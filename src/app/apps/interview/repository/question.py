@@ -41,6 +41,7 @@ class SQLAlchemyQuestionRepositoryV1(SQLAlchemyRepository):
             .join(QuestionTechnology, QuestionTechnology.question_id == self.model.id)
             .where(
                 QuestionTechnology.technology_id.in_(sub_query_technologies),
+                self.model.published == True,
             )
             .distinct(self.model.id, self.model.created_at)
             .order_by(self.model.created_at)
