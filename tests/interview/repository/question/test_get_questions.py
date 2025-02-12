@@ -92,22 +92,14 @@ async def init_data(session):
 async def test_get_questions_python(run_migrations, session, init_data):
     async with session:
         question_repo = SQLAlchemyQuestionRepositoryV1(session)
-        questions = await question_repo.get_questions(
-            [
-                "python",
-            ]
-        )
+        questions = await question_repo.get_questions(["python"])
     assert len(questions) == 3
 
 
 async def test_get_questions_sql(run_migrations, session, init_data):
     async with session:
         question_repo = SQLAlchemyQuestionRepositoryV1(session)
-        questions = await question_repo.get_questions(
-            [
-                "sql",
-            ]
-        )
+        questions = await question_repo.get_questions(["sql"])
     assert len(questions) == 3
 
 
@@ -116,3 +108,17 @@ async def test_get_questions_all(run_migrations, session, init_data):
         question_repo = SQLAlchemyQuestionRepositoryV1(session)
         questions = await question_repo.get_questions(["sql", "python"])
     assert len(questions) == 6
+
+
+async def test_get_questions_empty_stack(run_migrations, session, init_data):
+    async with session:
+        question_repo = SQLAlchemyQuestionRepositoryV1(session)
+        questions = await question_repo.get_questions([])
+    assert len(questions) == 0
+
+
+async def test_get_questions_wrong_stack(run_migrations, session, init_data):
+    async with session:
+        question_repo = SQLAlchemyQuestionRepositoryV1(session)
+        questions = await question_repo.get_questions(["_wrong_"])
+    assert len(questions) == 0

@@ -4,9 +4,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from model.base import Base, int_pk
 
 
-# from model import QuestionTechnology
-
-
 class Question(Base):
     __tablename__ = "question"
 
