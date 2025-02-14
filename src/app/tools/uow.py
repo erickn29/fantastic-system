@@ -51,18 +51,20 @@ class SQLAlchemyUOW:
         self._question_repo = question_repo
         self._user_repo = user_repo
 
+    def _check_session(self):
+        if not self._session:
+            raise ValueError("Вызов возможен только внутри контекстного менеджера")
+
     @property
     def question_repo(self) -> QuestionRepositoryProtocol:
         """Возвращает объект для работы с вопросами"""
-        if not self._session:
-            raise ValueError("Вызов возможен только внутри контекстного менеджера")
+        self._check_session()
         return self._question_repo(self._session)  # type: ignore
 
     @property
     def user_repo(self) -> UserRepositoryProtocol:
         """Возвращает объект для работы с пользователями"""
-        if not self._session:
-            raise ValueError("Вызов возможен только внутри контекстного менеджера")
+        self._check_session()
         return self._user_repo(self._session)  # type: ignore
 
     async def __aenter__(self):
