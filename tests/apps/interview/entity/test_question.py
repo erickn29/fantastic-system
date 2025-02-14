@@ -3,7 +3,7 @@ from datetime import datetime
 import pytz
 
 from app.apps.interview.dto.question import QuestionDto
-from app.apps.interview.entity.question import Question
+from app.apps.interview.entity.question import QuestionEntity
 
 
 async def test_get_random_question():
@@ -34,11 +34,11 @@ async def test_get_random_question():
         ),
     ]
 
-    question = Question.get_random_question(questions)
+    question = QuestionEntity.get_random_question(questions)
     assert isinstance(question, QuestionDto)
 
 
 async def test_get_random_question_empty_questions():
     questions = []
-    question = Question.get_random_question(questions)
+    question = QuestionEntity.get_random_question(questions)
     assert question is None

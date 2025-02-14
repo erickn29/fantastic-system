@@ -11,7 +11,7 @@ class QuestionProtocol(Protocol):
         pass
 
 
-class Question:
+class QuestionEntity:
     @staticmethod
     def get_random_question(questions: list[QuestionDto]) -> QuestionDto | None:
         """Возвращает случайный вопрос"""

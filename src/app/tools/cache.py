@@ -136,4 +136,4 @@ class Cache:
         return None
 
 
-cache = Cache()
+cache_service = Cache()
