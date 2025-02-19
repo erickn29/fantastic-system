@@ -13,6 +13,10 @@ from model.user_question import UserQuestion
 
 
 class QuestionRepositoryProtocol(Protocol):
+    async def find_question(self, id: int) -> QuestionDto | None:
+        """Возвращает вопрос по id"""
+        pass
+
     async def get_questions(self, technologies: list[str]) -> list[QuestionDto]:
         """Возвращает все вопросы по технологии"""
         pass
@@ -30,6 +34,13 @@ class QuestionRepositoryProtocol(Protocol):
 
 class SQLAlchemyQuestionRepositoryV1(SQLAlchemyRepository):
     model = Question
+
+    async def find_question(self, id: int) -> QuestionDto | None:
+        """Возвращает вопрос по id"""
+        question = await self.find(id=id)
+        if not question:
+            return None
+        return QuestionDto.model_validate(question)
 
     async def get_questions(self, technologies: Iterable[str]) -> list[QuestionDto]:
         """Возвращает все вопросы по технологии"""

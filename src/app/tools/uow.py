@@ -2,6 +2,10 @@ from asyncio import Protocol
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.apps.interview.repository.answer import (
+    AnswerRepositoryProtocol,
+    SQLAlchemyAnswerRepositoryV1,
+)
 from app.apps.interview.repository.question import (
     QuestionRepositoryProtocol,
     SQLAlchemyQuestionRepositoryV1,
@@ -18,9 +22,11 @@ class UOWProtocol(Protocol):
         self,
         question_repo: QuestionRepositoryProtocol,
         user_repo: UserRepositoryProtocol,
+        answer_repo: AnswerRepositoryProtocol,
     ):
         self._question_repo = question_repo
         self._user_repo = user_repo
+        self._answer_repo = answer_repo
 
     @property
     def question_repo(self) -> QuestionRepositoryProtocol:
@@ -31,6 +37,11 @@ class UOWProtocol(Protocol):
     def user_repo(self) -> UserRepositoryProtocol:
         """Возвращает объект для работы с пользователями"""
         return self._user_repo(self._session)  # type: ignore
+
+    @property
+    def answer_repo(self) -> AnswerRepositoryProtocol:
+        """Возвращает объект для работы с ответами"""
+        return self._answer_repo(self._session)  # type: ignore
 
     async def __aenter__(self) -> "UOWProtocol":
         """Возвращает объект для использования с помощью with"""
@@ -46,10 +57,12 @@ class SQLAlchemyUOW:
         self,
         question_repo: type[QuestionRepositoryProtocol],
         user_repo: type[UserRepositoryProtocol],
+        answer_repo: type[AnswerRepositoryProtocol],
     ):
         self._session = None
         self._question_repo = question_repo
         self._user_repo = user_repo
+        self._answer_repo = answer_repo
 
     def _check_session(self):
         if not self._session:
@@ -66,6 +79,12 @@ class SQLAlchemyUOW:
         """Возвращает объект для работы с пользователями"""
         self._check_session()
         return self._user_repo(self._session)  # type: ignore
+
+    @property
+    def answer_repo(self) -> AnswerRepositoryProtocol:
+        """Возвращает объект для работы с ответами"""
+        self._check_session()
+        return self._answer_repo(self._session)  # type: ignore
 
     async def __aenter__(self):
         self._session: AsyncSession = db_conn.session_factory()
@@ -86,4 +105,5 @@ class SQLAlchemyUOW:
 sqlalchemy_uow = SQLAlchemyUOW(
     question_repo=SQLAlchemyQuestionRepositoryV1,
     user_repo=SQLAlchemyUserRepositoryV1,
+    answer_repo=SQLAlchemyAnswerRepositoryV1,
 )
