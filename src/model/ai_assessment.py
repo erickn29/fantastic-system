@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy import ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -9,7 +11,7 @@ class AIAssessment(Base):
 
     id: Mapped[int_pk]
     text: Mapped[str] = mapped_column(Text, nullable=False, doc="Текст оценки")
-    user_id: Mapped[int] = mapped_column(
+    user_id: Mapped[UUID] = mapped_column(
         ForeignKey("user.id"), nullable=False, doc="ID пользователя"
     )
     question_id: Mapped[int] = mapped_column(
