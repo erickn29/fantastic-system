@@ -1,7 +1,10 @@
+import pytest
+
 from app.apps.interview.dto.answer import AnswerDto
 from app.apps.interview.repository.answer import SQLAlchemyAnswerRepositoryV1
 
 
+@pytest.mark.app
 async def test_create_answer(run_migrations, session, init_data):
     async with session:
         answer_repo = SQLAlchemyAnswerRepositoryV1(session)

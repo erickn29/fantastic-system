@@ -1,7 +1,10 @@
+import pytest
+
 from app.apps.interview.dto.question import QuestionDto
 from app.apps.interview.repository.question import SQLAlchemyQuestionRepositoryV1
 
 
+@pytest.mark.app
 async def test_get_questions_python(run_migrations, session, init_data):
     async with session:
         question_repo = SQLAlchemyQuestionRepositoryV1(session)
@@ -11,6 +14,7 @@ async def test_get_questions_python(run_migrations, session, init_data):
     assert len(questions) == 3
 
 
+@pytest.mark.app
 async def test_get_questions_sql(run_migrations, session, init_data):
     async with session:
         question_repo = SQLAlchemyQuestionRepositoryV1(session)
@@ -20,6 +24,7 @@ async def test_get_questions_sql(run_migrations, session, init_data):
     assert len(questions) == 3
 
 
+@pytest.mark.app
 async def test_get_questions_all(run_migrations, session, init_data):
     async with session:
         question_repo = SQLAlchemyQuestionRepositoryV1(session)
@@ -29,6 +34,7 @@ async def test_get_questions_all(run_migrations, session, init_data):
     assert len(questions) == 6
 
 
+@pytest.mark.app
 async def test_get_questions_empty_stack(run_migrations, session, init_data):
     async with session:
         question_repo = SQLAlchemyQuestionRepositoryV1(session)
@@ -37,6 +43,7 @@ async def test_get_questions_empty_stack(run_migrations, session, init_data):
     assert len(questions) == 0
 
 
+@pytest.mark.app
 async def test_get_questions_wrong_stack(run_migrations, session, init_data):
     async with session:
         question_repo = SQLAlchemyQuestionRepositoryV1(session)

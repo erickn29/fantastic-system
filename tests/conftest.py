@@ -1,3 +1,5 @@
+import asyncio
+
 from collections.abc import AsyncGenerator
 from uuid import uuid4
 
@@ -9,6 +11,16 @@ from sqlalchemy_utils import create_database, database_exists, drop_database
 
 from core.config import config
 from model.base import Base
+
+
+@pytest.fixture(scope="session")
+def event_loop():
+    try:
+        loop = asyncio.get_event_loop()
+    except (RuntimeError, RuntimeWarning):
+        loop = asyncio.new_event_loop()
+    yield loop
+    loop.close()
 
 
 @pytest.fixture(scope="session")
@@ -35,7 +47,7 @@ async def engine(database) -> AsyncGenerator:
     await engine.dispose()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="function", autouse=True)
 async def run_migrations(engine):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

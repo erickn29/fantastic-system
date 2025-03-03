@@ -1,3 +1,5 @@
+import pytest
+
 from app.apps.interview.dto.answer import AnswerDto
 from app.apps.interview.dto.question import QuestionDto
 from app.apps.interview.usecase.answer import AnswerUseCase
@@ -5,6 +7,7 @@ from app.apps.user.dto.user import UserDto
 from app.tools.uow import sqlalchemy_uow
 
 
+@pytest.mark.app
 async def test_process_user_answer(run_migrations, mocked_session, init_data):
     uc = AnswerUseCase(uow=sqlalchemy_uow)
     processed_data = await uc.process_user_answer(
@@ -19,6 +22,7 @@ async def test_process_user_answer(run_migrations, mocked_session, init_data):
     assert isinstance(processed_data[2], AnswerDto)
 
 
+@pytest.mark.app
 async def test_process_user_answer_no_user(run_migrations, mocked_session, init_data):
     uc = AnswerUseCase(uow=sqlalchemy_uow)
     processed_data = await uc.process_user_answer(
@@ -29,6 +33,7 @@ async def test_process_user_answer_no_user(run_migrations, mocked_session, init_
     assert processed_data is None
 
 
+@pytest.mark.app
 async def test_process_user_answer_no_question(
     run_migrations, mocked_session, init_data
 ):

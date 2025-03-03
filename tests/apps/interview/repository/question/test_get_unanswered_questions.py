@@ -1,7 +1,10 @@
+import pytest
+
 from app.apps.interview.dto.question import QuestionDto
 from app.apps.interview.repository.question import SQLAlchemyQuestionRepositoryV1
 
 
+@pytest.mark.app
 async def test_get_unanswered_questions_python_sql(run_migrations, session, init_data):
     async with session:
         question_repo = SQLAlchemyQuestionRepositoryV1(session)

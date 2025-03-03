@@ -1,11 +1,13 @@
 from datetime import datetime
 
+import pytest
 import pytz
 
 from app.apps.interview.dto.question import QuestionDto
 from app.apps.interview.entity.question import QuestionEntity
 
 
+@pytest.mark.app
 async def test_get_random_question():
     questions = [
         QuestionDto(
@@ -38,6 +40,7 @@ async def test_get_random_question():
     assert isinstance(question, QuestionDto)
 
 
+@pytest.mark.app
 async def test_get_random_question_empty_questions():
     questions = []
     question = QuestionEntity.get_random_question(questions)

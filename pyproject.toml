@@ -28,11 +28,29 @@ sqlalchemy-utils = "^0.41.2"
 
 
 [tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope="function"
 asyncio_mode = "auto"
 python_classes = "*Test"
 python_files = "tests.py test_*.py"
 pythonpath = "src"
 testpaths = ["tests"]
+markers = [
+    "app",
+    "repo",
+    "repo_get",
+    "repo_create",
+    "repo_update",
+    "repo_delete",
+    "repo_filter",
+    "repo_get_or_none",
+    "repo_all",
+    "repo_find",
+    "repo_count",
+    "repo_update_or_create",
+    "repo_find",
+    "repo_get_or_create",
+    "repo_exists",
+]
 
 
 [tool.poetry.group.dev.dependencies]
