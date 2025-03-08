@@ -61,7 +61,7 @@ async def session(engine) -> AsyncGenerator[AsyncSession, None]:
         yield session
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="function", autouse=True)
 async def mocked_session(session, module_mocker) -> AsyncGenerator[AsyncSession, None]:
     module_mocker.patch("core.database.db_conn.session_factory", return_value=session)
     yield session

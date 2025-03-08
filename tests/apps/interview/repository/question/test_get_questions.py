@@ -1,52 +1,50 @@
 import pytest
 
 from app.apps.interview.dto.question import QuestionDto
-from app.apps.interview.repository.question import SQLAlchemyQuestionRepositoryV1
+from app.apps.interview.repository.question import (
+    SAQuestionRepoV2,
+)
+from core.database import DatabaseHelper
 
 
 @pytest.mark.app
-async def test_get_questions_python(run_migrations, session, init_data):
-    async with session:
-        question_repo = SQLAlchemyQuestionRepositoryV1(session)
-        questions = await question_repo.get_questions(["python"])
+async def test_get_questions_python(database, init_data):
+    question_repo = SAQuestionRepoV2(DatabaseHelper(url=database))
+    questions = await question_repo.get_questions(["python"])
     assert isinstance(questions, list)
     assert isinstance(questions[0], QuestionDto)
     assert len(questions) == 3
 
 
 @pytest.mark.app
-async def test_get_questions_sql(run_migrations, session, init_data):
-    async with session:
-        question_repo = SQLAlchemyQuestionRepositoryV1(session)
-        questions = await question_repo.get_questions(["sql"])
+async def test_get_questions_sql(database, init_data):
+    question_repo = SAQuestionRepoV2(DatabaseHelper(url=database))
+    questions = await question_repo.get_questions(["sql"])
     assert isinstance(questions, list)
     assert isinstance(questions[0], QuestionDto)
     assert len(questions) == 3
 
 
 @pytest.mark.app
-async def test_get_questions_all(run_migrations, session, init_data):
-    async with session:
-        question_repo = SQLAlchemyQuestionRepositoryV1(session)
-        questions = await question_repo.get_questions(["sql", "python"])
+async def test_get_questions_all(database, init_data):
+    question_repo = SAQuestionRepoV2(DatabaseHelper(url=database))
+    questions = await question_repo.get_questions(["sql", "python"])
     assert isinstance(questions, list)
     assert isinstance(questions[0], QuestionDto)
     assert len(questions) == 6
 
 
 @pytest.mark.app
-async def test_get_questions_empty_stack(run_migrations, session, init_data):
-    async with session:
-        question_repo = SQLAlchemyQuestionRepositoryV1(session)
-        questions = await question_repo.get_questions([])
+async def test_get_questions_empty_stack(database, init_data):
+    question_repo = SAQuestionRepoV2(DatabaseHelper(url=database))
+    questions = await question_repo.get_questions([])
     assert isinstance(questions, list)
     assert len(questions) == 0
 
 
 @pytest.mark.app
-async def test_get_questions_wrong_stack(run_migrations, session, init_data):
-    async with session:
-        question_repo = SQLAlchemyQuestionRepositoryV1(session)
-        questions = await question_repo.get_questions(["_wrong_"])
+async def test_get_questions_wrong_stack(database, init_data):
+    question_repo = SAQuestionRepoV2(DatabaseHelper(url=database))
+    questions = await question_repo.get_questions(["_wrong_"])
     assert isinstance(questions, list)
     assert len(questions) == 0

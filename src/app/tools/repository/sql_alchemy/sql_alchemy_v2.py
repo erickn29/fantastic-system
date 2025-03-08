@@ -2,7 +2,7 @@ from collections.abc import Sequence
 from typing import Any, TypeVar
 
 from pydantic import BaseModel, ValidationError
-from sqlalchemy import Select, and_, func, or_, select
+from sqlalchemy import Result, Select, and_, func, or_, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import (
@@ -349,7 +349,7 @@ class BaseRepository:
 
 class SARepository:
     def __init__(self, connection: DatabaseHelper):
-        self._session = None
+        self._session: AsyncSession | None = None
         self._conn = connection
 
     def stmt(self, model: type[T]):
@@ -372,7 +372,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:to_dto",
+                        title="REPO:to_dto",
                     )
                     raise err
                 return result
@@ -404,7 +404,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:create",
+                        title="REPO:create",
                     )
                     raise SQLAlchemyError(error_text) from err
 
@@ -426,7 +426,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:delete",
+                        title="REPO:delete",
                     )
                     raise SQLAlchemyError(error_text) from err
 
@@ -466,7 +466,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:repo_get_or_create",
+                        title="REPO:repo_get_or_create",
                     )
                     raise SQLAlchemyError(error_text) from err
 
@@ -503,7 +503,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:repo_update",
+                        title="REPO:repo_update",
                     )
                     raise SQLAlchemyError(error_text) from err
 
@@ -549,7 +549,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:repo_update_or_create",
+                        title="REPO:repo_update_or_create",
                     )
                     raise SQLAlchemyError(error_text) from err
 
@@ -582,7 +582,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:to_dto",
+                        title="REPO:to_dto",
                     )
                     return None
                 return result
@@ -625,7 +625,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:repo_all",
+                        title="REPO:repo_all",
                     )
                     raise SQLAlchemyError(error_text) from err
                 finally:
@@ -663,7 +663,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:repo_count",
+                        title="REPO:repo_count",
                     )
                     raise SQLAlchemyError(error_text) from err
                 finally:
@@ -721,7 +721,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:repo_get",
+                        title="REPO:repo_get",
                     )
                     raise SQLAlchemyError(error_text) from err
                 finally:
@@ -758,7 +758,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:repo_exists",
+                        title="REPO:repo_exists",
                     )
                     raise SQLAlchemyError(error_text) from err
                 finally:
@@ -819,7 +819,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:repo_filter",
+                        title="REPO:repo_filter",
                     )
                     raise SQLAlchemyError(error_text) from err
                 finally:
@@ -877,7 +877,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:repo_find",
+                        title="REPO:repo_find",
                     )
                     raise SQLAlchemyError(error_text) from err
                 finally:
@@ -917,7 +917,7 @@ class SARepository:
                     sentry_message(
                         message=error_text,
                         level="error",
-                        title="CHATTER:repo_get_or_none",
+                        title="REPO:repo_get_or_none",
                     )
                     raise SQLAlchemyError(error_text) from err
                 finally:
@@ -927,6 +927,27 @@ class SARepository:
         session_exists = self._session is not None
         session = self._conn.session_factory() if not session_exists else self._session
         return QueryWrapper(session, model, session_exists)
+
+    async def execute(self, query: Select) -> Result:
+        session_exists = self._session is not None
+        session = self._conn.session_factory() if not session_exists else self._session
+        try:
+            result = await session.execute(query)
+            return result
+        except SQLAlchemyError as err:
+            error_text = (
+                f"Ошибка выполнения запроса.\n"
+                f"Текст ошибки в исключении {str(err)}.\n"
+            )
+            sentry_message(
+                message=error_text,
+                level="error",
+                title="REPO:repo_execute",
+            )
+            raise SQLAlchemyError(error_text) from err
+        finally:
+            if not session_exists:
+                await session.close()
 
     def _check_session(self):
         if not self._session:

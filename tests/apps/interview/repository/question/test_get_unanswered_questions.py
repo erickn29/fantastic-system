@@ -1,17 +1,19 @@
 import pytest
 
 from app.apps.interview.dto.question import QuestionDto
-from app.apps.interview.repository.question import SQLAlchemyQuestionRepositoryV1
+from app.apps.interview.repository.question import (
+    SAQuestionRepoV2,
+)
+from core.database import DatabaseHelper
 
 
 @pytest.mark.app
-async def test_get_unanswered_questions_python_sql(run_migrations, session, init_data):
-    async with session:
-        question_repo = SQLAlchemyQuestionRepositoryV1(session)
-        questions = await question_repo.get_unanswered_questions(
-            user_id=init_data["user"].id,
-            technologies=["python", "sql"],
-        )
+async def test_get_unanswered_questions_python_sql(database, init_data):
+    question_repo = SAQuestionRepoV2(DatabaseHelper(url=database))
+    questions = await question_repo.get_unanswered_questions(
+        user_id=init_data["user"].id,
+        technologies=["python", "sql"],
+    )
     assert isinstance(questions, list)
     assert isinstance(questions[0], QuestionDto)
     assert len(questions) == 1

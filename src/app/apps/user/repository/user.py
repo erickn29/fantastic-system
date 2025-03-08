@@ -38,27 +38,12 @@ class SQLAlchemyUserRepositoryV1(SQLAlchemyRepository):
         )
 
 
-class SQLAlchemyUserRepositoryV2(SARepository):
+class SAUserRepositoryV2(SARepository):
     model = User
 
     async def find_user(self, tg_id: int) -> UserDto | None:
         """Возвращает пользователя по tg_id"""
         if not tg_id:
             return None
-        user = await self.query(self.model).get(tg_id=tg_id)
-        if not user:
-            return None
-        return UserDto(
-            id=user.id,
-            tg_id=user.tg_id,
-            tg_url=user.tg_url,
-            first_name=user.first_name,
-            last_name=user.last_name,
-            tg_username=user.tg_username,
-            coins=user.coins,
-            is_active=user.is_active,
-            is_admin=user.is_admin,
-            subscription=user.subscription,
-            created_at=user.created_at,
-            updated_at=user.updated_at,
-        )
+        user: UserDto = await self.query(self.model).find(tg_id=tg_id, dto=UserDto)
+        return user

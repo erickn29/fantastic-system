@@ -1,10 +1,12 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class UserDto(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     tg_id: int
     tg_url: str
