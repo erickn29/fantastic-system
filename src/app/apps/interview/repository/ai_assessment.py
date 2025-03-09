@@ -85,11 +85,12 @@ class AIAssessmentRepository(SARepository):
         score: int = 1,
     ) -> AIAssessmentDTO | None:
         """Создает оценку ответа пользователя на вопрос"""
-        return await self.stmt(self.model).create(
-            text=text,
-            user_id=user_id,
-            question_id=question_id,
-            answer_id=answer_id,
-            score=score,
-            dto=AIAssessmentDTO,
-        )
+        async with self:
+            return await self.stmt(self.model).create(
+                text=text,
+                user_id=user_id,
+                question_id=question_id,
+                answer_id=answer_id,
+                score=score,
+                dto=AIAssessmentDTO,
+            )
