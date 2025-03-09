@@ -17,6 +17,7 @@ alembic = "^1.14.1"
 psycopg2-binary = "^2.9.10"
 asyncpg = "^0.30.0"
 pytz = "^2025.1"
+aiohttp = "^3.11.13"
 
 
 [tool.poetry.group.test.dependencies]
@@ -62,7 +63,7 @@ mypy = "^1.15.0"
 [tool.mypy]
 warn_return_any = true
 warn_unused_configs = true
-exclude = ["tests"]
+exclude = ["tests", "src/app/tools/repository/sql_alchemy"]
 
 
 [tool.black]

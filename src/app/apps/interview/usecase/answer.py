@@ -27,7 +27,5 @@ class AnswerUseCase:
         if not question or not user:
             return None
 
-        answer = await self._answer_repo.create_answer(
-            text=text, user_id=user.id, question_id=question.id
-        )
+        answer = await self._answer_repo.create_answer(text, user.id, question.id)
         return user, question, answer
