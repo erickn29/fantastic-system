@@ -63,7 +63,7 @@ mypy = "^1.15.0"
 [tool.mypy]
 warn_return_any = true
 warn_unused_configs = true
-exclude = ["tests", "src/app/tools/repository/sql_alchemy"]
+exclude = ["tests", "src.app.tools.repository"]
 
 
 [tool.black]

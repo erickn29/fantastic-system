@@ -5,7 +5,8 @@ import aiohttp
 
 class RequestServiceProtocol(Protocol):
     def __init__(self, url: str):
-        self._url = url
+        """Инициализирует сервис запросов"""
+        pass
 
     async def send_request_llm(self, data: dict) -> dict | None:
         """Отправляет запрос к сервису и получает ответ"""

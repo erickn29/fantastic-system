@@ -11,7 +11,7 @@ def extract_text_from_llm_response(response: dict) -> str | None:
             level="error",
             title="extract_text_from_llm_response",
         )
-        return
+        return None
     return text
 
 

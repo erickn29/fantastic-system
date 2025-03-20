@@ -158,7 +158,7 @@ class SAQuestionRepoV2(SARepository):
         return [QuestionDto.model_validate(question) for question in questions]
 
     async def get_questions_for_user(
-        self, user_id: UUID, technologies: Iterable[str] | None = None
+        self, user_id: UUID, technologies: Iterable[str]
     ) -> list[QuestionDto]:
         """Возвращает вопросы для пользователя"""
         return await self.get_unanswered_questions(
